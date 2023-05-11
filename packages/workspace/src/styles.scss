@@ -1,0 +1,38 @@
+.toolbar {
+  height: 31px;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tutorialPanel {
+  background-color: #5255A5;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 2px;
+  margin-right: 10px;
+}
+
+.actionConfirm__checkbox {
+  Label {
+    cursor: pointer;
+  }
+  input[type='checkbox']{
+    width: 15px !important;
+    height: 15px !important;
+  }
+  input {
+    accent-color: #5255A5;
+  }
+}
+.input-readonly-bg{
+  background: #1e2024;
+  align-items: center;
+}
+.input-readonly-box-shadow{
+  box-shadow: none !important;
+}
