@@ -4,6 +4,9 @@ import decode from 'jwt-decode'
 import fileOps from '@obsidians/file-ops'
 import platform from '@obsidians/platform'
 import { BuildService } from '@obsidians/ipc'
+import notification from '@obsidians/notification'
+import redux from '@obsidians/redux'
+
 
 class BifProvider extends BaseProvider {
 	constructor() {
@@ -33,11 +36,13 @@ class BifProvider extends BaseProvider {
 		}
 	}
 
-	async grant(code) {
-		const tokens = await this.fetchTokens(code)
+	async grant(code, history) {
+		const tokens = await this.fetchTokens(code, history)
+
 		if (!tokens) {
 			return {}
 		}
+
 		const { token } = tokens
 		const credentials = { token }
 		try {
@@ -51,8 +56,7 @@ class BifProvider extends BaseProvider {
 		}
 	}
 
-	async fetchTokens(code) {
-		try {
+	async fetchTokens(code, history) {
 			let url
 			let method
 			let body
@@ -79,12 +83,17 @@ class BifProvider extends BaseProvider {
 				method,
 				body,
 			})
-
+			if (response.status === 401) {
+				notification.error('登录过期', '请重新登录')
+				redux.dispatch('CLEAR_USER_PROFILE')
+				if (history) {
+					history.replace('/')
+				}
+				return
+			}
 			const { token, awsToken } = await response.json()
 			return { token, awsToken }
-		} catch (error) {
-			return
-		}
+
 	}
 
 	async fetchAwsCredential(token) {
